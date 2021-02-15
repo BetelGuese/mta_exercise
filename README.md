@@ -1,3 +1,11 @@
+## NOTES
+
+I haven't used mobx before so I decided to solve this exercise with hooks and later I integrate the mobx. I'm running out of time because of API link missunderstanding so mobx is missing. I have used redux before.
+
+I have got some warning when I use material-ui collapse I need to search some page to read why I got this refs warning.
+
+The searching is working only when user typed 3 or more characters from movie name.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

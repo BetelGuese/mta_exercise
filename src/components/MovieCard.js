@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { Card, CardHeader, CardMedia, CardContent, CardActions } from '@material-ui/core';
-import { Collapse, Avatar, IconButton, Typography, Link } from '@material-ui/core';
-import { red, blue, green } from '@material-ui/core/colors';
+import { Collapse, Avatar, IconButton, Typography } from '@material-ui/core';
+import { blue, red } from '@material-ui/core/colors';
 import StarIcon from '@material-ui/icons/Star';
 import SearchIcon from '@material-ui/icons/Search';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import moment from "moment";
+import MovieOtherDetails from './MovieOtherDetails';
+import SimilarMovies from './SimilarMovies';
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
@@ -28,8 +31,11 @@ const useStyles = makeStyles((theme) => ({
 	expandOpen: {
 		transform: 'rotate(180deg)',
 	},
-	avatar: {
+	avatarBelow7: {
 		backgroundColor: blue[500],
+	},
+	avatarAbove7: {
+		backgroundColor: red[500],
 	},
 }));
 
@@ -38,19 +44,29 @@ const MovieCard = (props) => {
 	const [expanded, setExpanded] = useState(false);
 	const [wikiDescription, setWikiDescription] = useState("");
 	const [wikiLink, setWikiLink] = useState("");
-
+	const [panelContent, setPanelContent] = useState("")
 
 	const handleExpandClick = async () => {
+		if(expanded) {
+			setExpanded(!expanded);
+		}
 		if(!expanded && wikiDescription === "") {
 			const wikiResponse = await searchWikiPage()
 			await fetchFirstParagraphFromWiki(wikiResponse)
 			await searchIMDBLink()
 		}
+		setPanelContent("wiki");
 		setExpanded(!expanded);
 	};
 
 	const handleSearchClick = async () => {
-		console.log(props.movie)
+		if(expanded) {
+			setExpanded(!expanded);
+		}
+		setTimeout(() => {
+			setPanelContent("similar");
+			setExpanded(!expanded);
+		},500)
 	}
 
 	const searchWikiPage = async () => {
@@ -87,8 +103,8 @@ const MovieCard = (props) => {
 			<Card className={classes.root}>
 				<CardHeader
 					avatar={
-						<Avatar aria-label="recipe" className={classes.avatar}>
-							{props.movie.name.substr(0,1)}
+						<Avatar aria-label="recipe" className={props.movie.score>7 ? classes.avatarAbove7 : classes.avatarBelow7}>
+							{props.movie.name.substr(0,2)}
 						</Avatar>
 					}
 					action={
@@ -97,7 +113,7 @@ const MovieCard = (props) => {
 						</IconButton>
 					}
 					title={props.movie.name}
-					subheader={props.movie.releaseDate}
+					subheader={moment(props.movie.releaseDate).format("MMMM DD. YYYY")}
 				/>
 				<CardMedia
 					className={classes.media}
@@ -132,16 +148,11 @@ const MovieCard = (props) => {
 					</IconButton>
 				</CardActions>
 				<Collapse in={expanded} timeout="auto" unmountOnExit>
-					<CardContent>
-						<Typography variant="body2" gutterBottom>
-							<Link href={wikiLink} target="_blank" color="inherit">
-								Wikipedia
-							</Link>
-						</Typography>
-						<Typography paragraph variant="body2">
-							{wikiDescription}
-						</Typography>
-					</CardContent>
+				{panelContent==="wiki" ? (
+					<MovieOtherDetails link={wikiLink} description={wikiDescription} />
+				) : (
+					<SimilarMovies movies={props.movie.similar} />
+				)}
 				</Collapse>
 			</Card>
 		</>
