@@ -23,7 +23,10 @@ const SearchingBox = (props) => {
 						label="Outlined" 
 						variant="outlined" 
 						value={props.searchText} 
-						onChange={(event) => props.setSearchText(event.target.value)} 
+						onChange={(event) => {
+							props.setSearchText(event.target.value)
+							props.setPage(1)
+						}}
 						placeholder='Type to search...'
 					/>
 				</form>
