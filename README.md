@@ -1,6 +1,10 @@
 ## NOTES
 
+Developer matrix link is: https://drive.google.com/file/d/1wgsEl85VMhhnhE9DlNSReegEF5dkHyWe/view?usp=sharing
+
 I haven't used mobx before so I decided to solve this exercise with hooks and later I integrate the mobx. I'm running out of time because of API link missunderstanding so mobx is missing. I have used redux before.
+
+TypeScript not used yet sorry.
 
 I have got some warning when I use material-ui collapse I need to search some page to read why I got this refs warning.
 
