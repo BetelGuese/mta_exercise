@@ -31,16 +31,52 @@ function App() {
 	const fetchMovies = async (searchText, page) => {
 		if(searchText!=="" && /[a-zA-Z'"!?,. ]{3,}/g.test(searchText)) {
 			setLoading((loading) => !loading);
-			const url = `https://api.themoviedb.org/3/search/movie?api_key=1a6fba433784895da0de73431d5bc415&language=en-US&query=${searchText}&page=${page}&include_adult=false`;
-			const response = await fetch(url);
+			const url = `https://tmdb.sandbox.zoosh.ie/graphql?api_key=1a6fba433784895da0de73431d5bc415`
+			const response = await fetch(url, {
+				method: 'POST',
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					query: `query {
+						searchMovies(query: "${searchText}") {
+							id
+							name
+							overview
+							releaseDate
+							genres {
+								id
+								name
+							}
+							poster {
+								url: custom(size: "w185_and_h278_bestv2")
+							}
+							backdrop {
+								medium
+							}
+							popularity
+							votes
+							score
+							similar {
+								id
+								name
+							}
+							socialMedia {
+								facebook
+								imdb
+								instagram
+								twitter
+							}
+						}
+					}`
+				})
+			});
 			if (!response.ok) {
 				setErrorMessage("Something went wrong until the fethcing the movies. Please try again later!");
-				setOpen(true);				
+				setOpen(true);
+				setLoading(false);
+				return
 			}
 			const responseJSON = await response.json();
-			if(responseJSON.results) {
-				setMovies(responseJSON.results);
-			}
+			setMovies(responseJSON.data.searchMovies);
 			setLoading((loading) => !loading);
 		}
 	}
