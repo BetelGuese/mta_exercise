@@ -26,6 +26,7 @@ const SearchingBox = (props) => {
 						onChange={(event) => {
 							props.setSearchText(event.target.value)
 							props.setPage(1)
+							props.setLastPage(false)
 						}}
 						placeholder='Type to search...'
 					/>

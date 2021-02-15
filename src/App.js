@@ -25,10 +25,12 @@ function App() {
 	const [searchText, setSearchText] = useState('Harry Potter');
 	const [page, setPage] = useState(1);
 	const [loading, setLoading] = useState(false);
+	const [firstRun, setFirstRun] = useState(true);
+	const [lastPage, setLastPage] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
 
-	const fetchMovies = async (searchText, page) => {
+	const fetchMovies = async (searchText, p) => {
 		if(searchText!=="" && /[a-zA-Z'"!?,. ]{3,}/g.test(searchText)) {
 			setLoading((loading) => !loading);
 			const url = `https://tmdb.sandbox.zoosh.ie/graphql?api_key=1a6fba433784895da0de73431d5bc415`
@@ -37,7 +39,7 @@ function App() {
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					query: `query {
-						searchMovies(query: "${searchText}") {
+						searchMovies(query: "${searchText}" page: ${p}) {
 							id
 							name
 							overview
@@ -75,15 +77,33 @@ function App() {
 				setLoading(false);
 				return
 			}
-			const responseJSON = await response.json();
-			setMovies(responseJSON.data.searchMovies);
+			let responseJSON
+			try {
+				responseJSON = await response.json();
+				console.log(responseJSON)
+			} catch (err) {
+				setErrorMessage("Something went wrong until the fethcing the movies. Please try again later!");
+				setOpen(true);
+				setLoading(false);
+				return
+			}
+			if(responseJSON.data.searchMovies.length!==20) setLastPage(true)
+			if(page!==1) {
+				setMovies([...movies, ...responseJSON.data.searchMovies])
+			} else {
+				setMovies(responseJSON.data.searchMovies);
+			}
 			setLoading((loading) => !loading);
 		}
 	}
 
 	//TODO infinite scrolling
 	const handleWaypoint = async (event) => {
-		console.log('Waypoint reached', searchText, page)
+		if(!firstRun && !lastPage) {
+			setPage(page+1)
+		}
+		setFirstRun(false)
+
 	}
 
 	const handleClose = (event, reason) => {
@@ -102,7 +122,7 @@ function App() {
 			<div className="App">
 				<Container maxWidth="lg">					
 					<HeadComponent heading="Movies" />
-					<SearchingBox searchText={searchText} setSearchText={setSearchText} setPage={setPage} loading={loading} />
+					<SearchingBox searchText={searchText} setSearchText={setSearchText} setPage={setPage} setLastPage={setLastPage} loading={loading} />
 					<Grid container spacing={3}>
 						<MovieList movies={movies} />
 					</Grid>
