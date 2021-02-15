@@ -12,7 +12,7 @@ const MovieOtherDetails = (props) => {
 				</Link>
 			</Typography>
 			<Typography paragraph variant="body2">
-				{props.description}
+				{props.description==="" ? "No data avaliable" : props.description}
 			</Typography>
 		</CardContent>
 	)

@@ -97,7 +97,6 @@ function App() {
 		}
 	}
 
-	//TODO infinite scrolling
 	const handleWaypoint = async (event) => {
 		if(!firstRun && !lastPage) {
 			setPage(page+1)

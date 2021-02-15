@@ -73,6 +73,7 @@ const MovieCard = (props) => {
 		const url = `https://en.wikipedia.org/w/api.php?action=opensearch&origin=*&search=${props.movie.name}&limit=1&namespace=0&format=json`;
 		const res = await fetch(url);
 		const response = await res.json();
+		console.log(response)
 		if(typeof response === 'object' && response[0] !== '') {
 			setWikiLink(response[response.length-1][0])
 			return response;
@@ -84,8 +85,12 @@ const MovieCard = (props) => {
 			const wikiUrl = `https://en.wikipedia.org/w/api.php?action=query&origin=*&prop=extracts&exintro&explaintext&titles=${encodeURI(response[0])}&format=json`
 			const wikiRes = await fetch(wikiUrl);
 			const wikiResponse = await wikiRes.json();
-			const page = Object.keys(wikiResponse.query.pages)[0]
-			setWikiDescription(wikiResponse.query.pages[page].extract)
+			const page = Object.keys(wikiResponse.query.pages)[0];
+			if(parseInt(page,10)===-1) {
+				setWikiDescription("No data avaliable")
+			} else {
+				setWikiDescription(wikiResponse.query.pages[page].extract);
+			}
 		} else {
 			//TODO error handling
 		}
