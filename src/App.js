@@ -3,8 +3,9 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { Container, Grid } from '@material-ui/core';
 import './App.css';
-import HeadComponent from './components/HeadComponent'
+import HeadComponent from './components/HeadComponent';
 import SearchingBox from './components/SearchingBox';
+import MovieList from './components/MovieList';
 
 function App() {
 	const darkTheme = createMuiTheme({
@@ -54,6 +55,9 @@ function App() {
 				<Container maxWidth="lg">					
 					<HeadComponent heading="Movies" />
 					<SearchingBox searchText={searchText} setSearchText={setSearchText} loading={loading} />
+					<Grid container spacing={3}>
+						<MovieList movies={movies} />
+					</Grid>
 				</Container>
 			</div>
 		</ThemeProvider>
