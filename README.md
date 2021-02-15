@@ -8,7 +8,7 @@ TypeScript not used yet sorry.
 
 I have got some warning when I use material-ui collapse I need to search some page to read why I got this refs warning.
 
-The searching is working only when user typed 3 or more characters from movie name.
+The searching works when enter pressed on search input.
 
 # Getting Started with Create React App
 

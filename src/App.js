@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Waypoint } from 'react-waypoint';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import { Container, Grid, Snackbar } from '@material-ui/core';
+import { Container, Grid, Snackbar, Backdrop, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
+import { makeStyles } from '@material-ui/core/styles';
 import './App.css';
 import HeadComponent from './components/HeadComponent';
 import SearchingBox from './components/SearchingBox';
@@ -13,14 +14,23 @@ function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+const darkTheme = createMuiTheme({
+	palette: {
+		//TODO: The dark theme not shown
+		//type: 'dark',
+		type: 'light',
+	}
+});
+
+const useStyles = makeStyles((theme) => ({
+	backdrop: {
+	  zIndex: theme.zIndex.drawer + 1,
+	  color: '#fff',
+	},
+  }));
+
 function App() {
-	const darkTheme = createMuiTheme({
-		palette: {
-			//TODO: The dark theme not shown
-			//type: 'dark',
-			type: 'light',
-		}
-	});
+	const classes = useStyles();
 	const [movies, setMovies] = useState([]);
 	const [searchText, setSearchText] = useState('Harry Potter');
 	const [page, setPage] = useState(1);
@@ -80,7 +90,6 @@ function App() {
 			let responseJSON
 			try {
 				responseJSON = await response.json();
-				console.log(responseJSON)
 			} catch (err) {
 				setErrorMessage("Something went wrong until the fethcing the movies. Please try again later!");
 				setOpen(true);
@@ -126,7 +135,7 @@ function App() {
 			<div className="App">
 				<Container maxWidth="lg">					
 					<HeadComponent heading="Movies" />
-					<SearchingBox searchText={searchText} setSearchText={setSearchText} setPage={setPage} setLastPage={setLastPage} loading={loading} />
+					<SearchingBox searchText={searchText} setSearchText={setSearchText} setPage={setPage} setLastPage={setLastPage} />
 					<Grid container spacing={3}>
 						<MovieList movies={movies} />
 					</Grid>
@@ -137,6 +146,9 @@ function App() {
 						{errorMessage}
 					</Alert>
  				</Snackbar>
+				 <Backdrop className={classes.backdrop} open={loading}>
+					<CircularProgress color="inherit" />
+				</Backdrop>
 			</div>
 		</ThemeProvider>
 	);

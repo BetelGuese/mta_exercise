@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { TextField, Grid, CircularProgress, Box } from '@material-ui/core';
+import { TextField, Grid } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -36,9 +36,6 @@ const SearchingBox = (props) => {
 						placeholder='Type to search...'
 					/>
 				</form>
-				<Box component="div" visibility={props.loading ? "visible" : "hidden"}>
-					<CircularProgress />
-				</Box>
 			</Grid>
 		</Grid>
 	);
