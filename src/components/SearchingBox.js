@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField, Grid, CircularProgress, Box } from '@material-ui/core';
 
@@ -14,19 +14,24 @@ const useStyles = makeStyles((theme) => ({
 
 const SearchingBox = (props) => {
 	const classes = useStyles();
+	const [searchValue, setSearchValue] = useState(props.searchText) 
+
 	return (
 		<Grid container spacing={3} alignItems="center">
 			<Grid item xs={12}>
-				<form className={classes.root} noValidate autoComplete="off" onSubmit={e => { e.preventDefault(); }}>
+				<form className={classes.root} noValidate autoComplete="off" onSubmit={e => { 
+					e.preventDefault();
+					props.setSearchText(searchValue);
+					props.setPage(1);
+					props.setLastPage(false);
+				}}>
 					<TextField 
 						id="outlined-basic" 
-						label="Outlined" 
+						label="Press enter to search..." 
 						variant="outlined" 
-						value={props.searchText} 
+						value={searchValue} 
 						onChange={(event) => {
-							props.setSearchText(event.target.value)
-							props.setPage(1)
-							props.setLastPage(false)
+							setSearchValue(event.target.value)
 						}}
 						placeholder='Type to search...'
 					/>

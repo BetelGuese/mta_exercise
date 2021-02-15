@@ -31,7 +31,7 @@ function App() {
 	const [errorMessage, setErrorMessage] = useState("");
 
 	const fetchMovies = async (searchText, p) => {
-		if(searchText!=="" && /[a-zA-Z'"!?,. ]{3,}/g.test(searchText)) {
+		if(searchText!=="" && /[a-zA-Z'"!?,. ]{2,}/g.test(searchText)) {
 			setLoading((loading) => !loading);
 			const url = `https://tmdb.sandbox.zoosh.ie/graphql?api_key=1a6fba433784895da0de73431d5bc415`
 			const response = await fetch(url, {
@@ -94,6 +94,11 @@ function App() {
 				setMovies(responseJSON.data.searchMovies);
 			}
 			setLoading((loading) => !loading);
+		} else {
+			setErrorMessage("Querystring is not valid!");
+			setOpen(true);
+			setLoading(false);
+			return
 		}
 	}
 
